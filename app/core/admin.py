@@ -6,6 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from user.forms import CustomUserCreationForm, CustomUserChangeForm
 from user.models import CustomUser
+from api.models import Court, TrainingSession
 
 
 class CustomUserAdmin(UserAdmin):
@@ -17,12 +18,12 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     model = CustomUser
 
-    list_display = ("id", "email", "name", "date_joined", "is_staff", "is_active", "is_superuser",)
-    list_filter = ("email", "is_staff", "is_active", "is_superuser", )
+    list_display = ("id", "email", "name", "date_joined", "is_coach", "is_staff", "is_active", "is_superuser",)
+    list_filter = ("email", "is_coach", "is_staff", "is_active", "is_superuser", )
 
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
-        ("Permissions", {"fields": ("is_staff", "is_active", 'is_superuser',)}),
+        (None, {"fields": ("email", "name", "password")}),
+        ("Permissions", {"fields": ("is_coach", "is_staff", "is_active", 'is_superuser',)}),
         ('Important dates', {'fields':('last_login',)}),
     )
     readonly_fields = ['last_login'] #  prevent it from being modified
@@ -32,10 +33,12 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('wide',),
             'fields': (
                 'email', 'name', 'password1', 'password2',
-                'is_active', 'is_staff', 'is_superuser',
+                'is_coach', 'is_active', 'is_staff', 'is_superuser',
             )
         }),
     )
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Court)
+admin.site.register(TrainingSession)
