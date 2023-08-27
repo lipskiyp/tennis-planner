@@ -17,7 +17,7 @@ class CreateUserView(generics.CreateAPIView):  # handles http post requests
 
 class CreateTokenView(ObtainAuthToken):
     """Obtain user authentication token."""
-    serializer_class = AuthTokenSerializer  # custom serializer that user email as the primary user identifier
+    serializer_class = AuthTokenSerializer  # custom serializer with user email as the primary user identifier
     renderrer_classes = api_settings.DEFAULT_RENDERER_CLASSES # add browsable API
 
     def post(self, request, *args, **kwargs):
@@ -39,7 +39,7 @@ class CreateTokenView(ObtainAuthToken):
 class ManageUserView(generics.RetrieveUpdateAPIView):  # handles http get, put and patch requests
     """Retrieve and update the authenticated user."""
     serializer_class = UserSerializer
-    authentication_classes = [authentication.TokenAuthentication]  # authentication scheme
+    authentication_classes = [authentication.TokenAuthentication, authentication.SessionAuthentication]  # authentication scheme
     permission_classes = [permissions.IsAuthenticated]  # ensure user is authenticated
 
     def get_object(self):  # retrieve the requesting user only

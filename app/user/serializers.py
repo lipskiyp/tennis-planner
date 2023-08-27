@@ -11,8 +11,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()  # Select model
-        fields = ['email', 'password', 'name']  # fields provided in a request
+        fields = ['email', 'password', 'name', 'date_joined']  # fields provided in a request
         extra_kwargs = {'password':{'write_only': True, 'min_length': 5}}  # extra meta data to prevent the password from being retrieved
+        read_only_fields = ['date_joined']
 
     def create(self, validated_data):
         """Create and return user."""

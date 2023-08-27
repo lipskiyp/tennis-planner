@@ -20,7 +20,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()  # assign model manager
 
     USERNAME_FIELD = "email"  # use an email address as the primary user identifier
-    REQUIRED_FIELDS = []
+    #REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email
