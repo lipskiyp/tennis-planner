@@ -1,13 +1,15 @@
 """
 Views for the user API.
 """
-from rest_framework import generics, authentication, permissions
+from rest_framework import generics, authentication, permissions, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
+from .permissions import IsStaffPermission
 from .serializers import UserSerializer, AuthTokenSerializer
+from .models import CustomUser
 
 
 class CreateUserView(generics.CreateAPIView):  # handles http post requests
