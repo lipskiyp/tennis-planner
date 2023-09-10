@@ -11,8 +11,8 @@ from api import views
 
 
 router = DefaultRouter()
-router.register('courts', views.CourtViewSet, basename='courts')  # creates new endpoint, i.e. /api/recipes/, and assigns all views from RecipeViewSet to the viewset
-router.register('sessions', views.TrainingSessionViewSet, basename='sessions')
+router.register('courts', views.CourtViewSet)  # creates new endpoint, i.e. /api/recipes/, and assigns all views from RecipeViewSet to the viewset
+router.register('sessions', views.TrainingSessionViewSet)
 
 
 app_name = 'api'  # used for reverse mapping

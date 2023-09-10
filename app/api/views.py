@@ -14,7 +14,7 @@ from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter, OpenApiTypes
 
 from .serializers import CourtSerializer, TrainingSessionSerializer
-from user.permissions import IsStaffPermission, IsCoachPermission, IsStaffOrSessionClientCoachPermission
+from user.permissions import IsStaffPermission, IsStaffOrSessionClientCoachPermission
 from .models import Court, TrainingSession
 
 
@@ -30,6 +30,11 @@ from .models import Court, TrainingSession
                 'end_date',
                 OpenApiTypes.STR,
                 description="Session end date range.",
+            ),
+            OpenApiParameter(
+                'court',
+                OpenApiTypes.INT,
+                description="Court id.",
             )
         ]
     )
@@ -62,6 +67,10 @@ class TrainingSessionViewSet(viewsets.ModelViewSet):
         end_date = self.request.query_params.get('end_date')  # filter out all session after end_date
         if end_date:
             queryset = queryset.filter(session_date__lte=end_date)
+
+        court = self.request.query_params.get('court')  # filter all sessions on court
+        if court:
+            queryset = queryset.filter(court=court)
 
         return queryset
 

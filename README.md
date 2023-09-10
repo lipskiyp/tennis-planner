@@ -11,7 +11,7 @@ Django web appllication to manage tennis training sessions with front-end UI, Dj
 * The app supports both, session authentication scheme and token user authentication via the API.
 * Custom API permissions with 4 permission groups (user, coach, staff, superuser).
 * Auto-genertaed Swagger UI documentation for the REST API.
-* (IN PROGRESS) Dynamic front-end implemented in JavaScript using jQuery with AJAX requests to the API.
+* Dynamic front-end for users and staff implemented in JavaScript using jQuery with AJAX requests to the API.
 * Unit tests for the API and back-end of the core app.
 * Custom Django commands.
 

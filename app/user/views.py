@@ -1,6 +1,11 @@
 """
 Views for the user API.
 """
+from django.contrib.auth import get_user_model
+from django.db.models import Q
+
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter, OpenApiTypes
+
 from rest_framework import generics, authentication, permissions, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -9,7 +14,6 @@ from rest_framework.settings import api_settings
 
 from .permissions import IsStaffPermission
 from .serializers import UserSerializer, AuthTokenSerializer
-from .models import CustomUser
 
 
 class CreateUserView(generics.CreateAPIView):  # handles http post requests
@@ -47,3 +51,48 @@ class ManageUserView(generics.RetrieveUpdateAPIView):  # handles http get, put a
     def get_object(self):  # retrieve the requesting user only
         """Retrieve and return the authenticated user."""
         return self.request.user
+
+
+
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            'is_client',
+            OpenApiTypes.BOOL,
+            description="Users are client",
+        ),
+        OpenApiParameter(
+            'is_coach',
+            OpenApiTypes.BOOL,
+            description="Users are coaches.",
+        ),
+        OpenApiParameter(
+            'is_staff',
+            OpenApiTypes.BOOL,
+            description="Users are staff.",
+        )
+    ]
+)
+class UserView(generics.ListAPIView):  # list all user
+    """Retrieve users."""
+    serializer_class = UserSerializer
+    authentication_classes = [authentication.TokenAuthentication, authentication.SessionAuthentication]  # authentication scheme
+    permission_classes = [permissions.IsAuthenticated, IsStaffPermission]  # ensure user is authenticated and staff
+
+    def get_queryset(self):
+        """Custom queryset logic for users."""
+        queryset = get_user_model().objects.all()
+
+        is_client = self.request.query_params.get('is_client')
+        if is_client:
+            queryset = queryset.filter(Q(is_coach=False) & Q(is_staff=False))
+
+        is_coach = self.request.query_params.get('is_coach')
+        if is_coach:
+            queryset = queryset.filter(is_coach=bool(is_coach))
+
+        is_staff = self.request.query_params.get('is_staff')
+        if is_staff:
+            queryset = queryset.filter(is_staff=bool(is_staff))
+
+        return queryset

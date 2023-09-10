@@ -1,41 +1,48 @@
 $(document).ready(() => {
-    // $("#SessionsContainer").html("Hello");
-    renderMySessions();
+
+    renderUpcomingSessions("#SessionsContainer", "#SessionsArchieveButton");
+
 });
 
-function renderMySessions() {
+function renderUpcomingSessions(sessionsContainerId, SessionsArchieveButtonId) {
 
-    sessionsGET()
+    renderSessions(sessionsContainerId, startDate=getToday(), endDate="");
+
+    $(SessionsArchieveButtonId).html("Archieve")
+    $(SessionsArchieveButtonId).off('click').on('click', function() {
+        renderArchieveSessions(sessionsContainerId, SessionsArchieveButtonId);
+    });
+
+}
+
+function renderArchieveSessions(sessionsContainerId, SessionsArchieveButtonId) {
+
+    renderSessions(sessionsContainerId, startDate="", endDate=getToday());
+
+    $(SessionsArchieveButtonId).html("Upcoming")
+    $(SessionsArchieveButtonId).off('click').on('click', function() {
+        renderUpcomingSessions(sessionsContainerId, SessionsArchieveButtonId);
+    });
+
+}
+
+function renderSessions(sessionsContainerId, startDate="", endDate="") {
+
+    let sessionsContainer = $(sessionsContainerId);
+    sessionsContainer.empty();  // clear container
+
+    sessionsGET(startDate=startDate, endDate=endDate)
     .then(sessions => {
-        const sessionsContainer = $("#SessionsContainer");
         sessions.forEach(session => {  // For every session
             sessionsContainer.append(createSessionElement(session))
         });
     });
 
-}
+};
 
-function createSessionElement(session) {
+function getToday() {
 
-    console.log(session)
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2, '0')}`;
 
-    let sessionElement = document.createElement("div");
-    sessionElement.className = "card";
-
-    let sessionBody = document.createElement("div");
-    sessionBody.className = "card-body";
-
-    let sessionTittle = document.createElement("h5");
-    sessionTittle.className = "card-title";
-    sessionTittle.innerHTML = session.court.court_name;
-
-    let sessionSubtitle = document.createElement("h6");
-    sessionSubtitle.className = "card-subtitle mb-2 text-body-secondary";
-    sessionSubtitle.innerHTML = `On ${session.session_date} at ${session.session_time}`;
-
-    sessionBody.append(sessionTittle, sessionSubtitle);
-    sessionElement.append(sessionBody);
-
-    return sessionElement;
-
-}
+};

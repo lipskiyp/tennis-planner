@@ -31,7 +31,8 @@ class TrainingSessionSerializer(serializers.ModelSerializer):
     coach = UserSerializer(read_only=True)
     coach_id = serializers.PrimaryKeyRelatedField(source='coach',
                                                   queryset=CustomUser.objects.all(),
-                                                  write_only=True)
+                                                  write_only=True,
+                                                  required=False)
 
     class Meta:
         model = TrainingSession
