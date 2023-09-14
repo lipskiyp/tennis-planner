@@ -1,0 +1,28 @@
+{% extends "core/layout.html" %}
+{% load static %}
+
+{% block title %}
+    Manage Courts
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'core/manage_courts/manageCourts.js' %}"></script>
+    <script src="{% static 'core/manage_courts/renderManageCourts.js' %}"></script>
+    <script src="{% static 'core/manage_courts/renderManageCourt.js' %}"></script>
+    <script src="{% static 'core/api.js' %}"></script>
+    <script src="{% static 'core/getCookies.js' %}"></script>
+    <script src="{% static 'core/getToday.js' %}"></script>
+    <script type="text/javascript">
+        var courtImageUrl = "{% static 'core/images/tennis_court.jpg' %}";
+    </script>
+{% endblock %}
+
+{% block username %}
+    {{ user.is_authenticated|json_script:"user_is_authenticated" }}
+{% endblock %}
+
+{% block body %}
+    <div id="ManageCourtsContainer" class="container-fluid text-center"></div>
+    <br>
+    <div id="ManageCourtContainer" class="container-fluid text-center w-50 mx-auto"></div>
+{% endblock %}

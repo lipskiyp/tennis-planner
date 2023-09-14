@@ -2,11 +2,14 @@
 {% load static %}
 
 {% block title %}
-    Tennis Planner
+    Add Session
 {% endblock %}
 
 {% block script %}
+    <script src="{% static 'core/add_session/addSession.js' %}"></script>
+    <script src="{% static 'core/add_session/renderAddSessionForm.js' %}"></script>
     <script src="{% static 'core/api.js' %}"></script>
+    <script src="{% static 'core/getCookies.js' %}"></script>
 {% endblock %}
 
 {% block username %}
@@ -15,5 +18,5 @@
 
 {% block body %}
     <br>
-    <h2 class="text-center">Welcome to Tennis Planner!</h2>
+    <div id="AddSessionFormContainer" class="container-fluid w-50 mx-auto"></div>
 {% endblock %}

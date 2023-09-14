@@ -35,7 +35,17 @@ from .models import Court, TrainingSession
                 'court',
                 OpenApiTypes.INT,
                 description="Court id.",
-            )
+            ),
+            OpenApiParameter(
+                'start_time_before',
+                OpenApiTypes.STR,
+                description="Session start time before.",
+            ),
+            OpenApiParameter(
+                'start_time_after',
+                OpenApiTypes.STR,
+                description="Session start time after.",
+            ),
         ]
     )
 )
@@ -58,7 +68,7 @@ class TrainingSessionViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
 
         if not self.request.user.is_superuser or not self.request.user.is_staff:  # allow access to all training sessions for the superuser and staff only.
-            queryset = queryset.filter(Q(client=self.request.user) | Q(coach=self.request.user))#.order_by('session_date', 'session_time')  # filter sessions where request user is client or coach.
+            queryset = queryset.filter(Q(client=self.request.user) | Q(coach=self.request.user)).order_by('session_date', 'session_time')  # filter sessions where request user is client or coach.
 
         start_date = self.request.query_params.get('start_date')  # filter out all session before start_date
         if start_date:
@@ -71,6 +81,14 @@ class TrainingSessionViewSet(viewsets.ModelViewSet):
         court = self.request.query_params.get('court')  # filter all sessions on court
         if court:
             queryset = queryset.filter(court=court)
+
+        start_time_before = self.request.query_params.get('start_time_before')  # filter out all sessions with start time before
+        if start_time_before:
+            queryset = queryset.filter(session_time__lt=start_time_before)
+
+        start_time_after = self.request.query_params.get('start_time_after')  # filter out all sessions with end time before
+        if start_time_after:
+            queryset = queryset.filter(session_time__gt=start_time_after)
 
         return queryset
 

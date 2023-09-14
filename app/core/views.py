@@ -9,12 +9,10 @@ from django.db import IntegrityError
 from django.urls import reverse
 from django.views import View
 
+import requests
+
 
 index_template = template_name = "core/index.html"
-
-
-COURTS_URL = 1
-SESSION_URL = 1
 
 
 class IndexView(View):
@@ -25,10 +23,10 @@ class IndexView(View):
         return render(request, self.template_name)
 
 
-class AddSessionView(PermissionRequiredMixin, LoginRequiredMixin, View):
-    """Add session view (staff only)."""
+class ManageCourts(PermissionRequiredMixin, LoginRequiredMixin, View):
+    """Manage courts view (staff only)."""
     permission_required = "user.IsStaffPermission"
-    template_name = "core/addsession.html"
+    template_name = "core/manage_courts.html"
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
@@ -37,14 +35,27 @@ class AddSessionView(PermissionRequiredMixin, LoginRequiredMixin, View):
                           {"alert": "User must be staff."})
 
         else:  # if user is staff
+            return render(request, self.template_name)
 
 
+class AddSessionView(PermissionRequiredMixin, LoginRequiredMixin, View):
+    """Add session view (staff only)."""
+    permission_required = "user.IsStaffPermission"
+    template_name = "core/add_session.html"
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return render(request,
+                          index_template,
+                          {"alert": "User must be staff."})
+
+        else:  # if user is staff
             return render(request, self.template_name)
 
 
 class MySessionsView(LoginRequiredMixin, View):
     """My sessions view."""
-    template_name = "core/mysessions.html"
+    template_name = "core/my_sessions.html"
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)

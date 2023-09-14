@@ -95,4 +95,4 @@ class UserView(generics.ListAPIView):  # list all user
         if is_staff:
             queryset = queryset.filter(is_staff=bool(is_staff))
 
-        return queryset
+        return queryset.order_by('email')  # order by email
